@@ -5,7 +5,7 @@ namespace backend.Helpers
 {
     public class FileHelper
     {
-        public static void CheckImagePathExisting(string filePath)
+        public static void CheckFilePathExisting(string filePath)
         {
             if (String.IsNullOrEmpty(filePath))
                 throw new NullReferenceException("File path is empty");

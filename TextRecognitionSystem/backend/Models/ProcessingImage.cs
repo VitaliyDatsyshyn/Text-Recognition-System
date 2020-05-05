@@ -14,7 +14,7 @@ namespace backend.Models
 
         public void Binarize()
         {
-            FileHelper.CheckImagePathExisting(_currentImagePath);
+            FileHelper.CheckFilePathExisting(_currentImagePath);
             var binarizedImagePath = FileHelper.InsertMarkIntoFileName(_currentImagePath, "binarized");
             var binarizator = new Binarizator(_currentImagePath, binarizedImagePath);
             if (binarizator.Binarize())
@@ -23,7 +23,7 @@ namespace backend.Models
 
         public void RomoveNoise()
         {
-            FileHelper.CheckImagePathExisting(_currentImagePath);
+            FileHelper.CheckFilePathExisting(_currentImagePath);
             var unnoisedImagePath = FileHelper.InsertMarkIntoFileName(_currentImagePath, "unnoised");
             var noiseRemover = new NoiseRemover(_currentImagePath, unnoisedImagePath);
             if (noiseRemover.RemoveNoise())
@@ -32,21 +32,29 @@ namespace backend.Models
 
         public void AdjustContrast()
         {
-            FileHelper.CheckImagePathExisting(_currentImagePath);
+            FileHelper.CheckFilePathExisting(_currentImagePath);
             var contrastedImagePath = FileHelper.InsertMarkIntoFileName(_currentImagePath, "contrasted");
             var contrastAdjuster = new ContrastAdjuster(_currentImagePath, contrastedImagePath, 180);
             if (contrastAdjuster.AdjustContrast())
                 _currentImagePath = contrastedImagePath;
         }
 
-        public void Rotate()
+        public void Rotate(int angle)
         {
-            FileHelper.CheckImagePathExisting(_currentImagePath);
-            var rotatedImagePath = FileHelper.InsertMarkIntoFileName(_currentImagePath, "rotated");
-            var turningAngle = 50; //PREDICT TURNING ANGLE HERE
-            var rotator = new Rotator(_currentImagePath, rotatedImagePath, turningAngle);
+            FileHelper.CheckFilePathExisting(_currentImagePath);
+            var rotatedImagePath = FileHelper.InsertMarkIntoFileName(_currentImagePath, "rotated on " + angle.ToString());
+            var rotator = new Rotator(_currentImagePath, rotatedImagePath, angle);
             if (rotator.Rotate())
                 _currentImagePath = rotatedImagePath;
+        }
+
+        public int PredictTurningAngle(string pathToMLModel)
+        {
+            if (string.IsNullOrEmpty(pathToMLModel))
+                pathToMLModel = @"Resources\TurningAngleModel.zip";
+
+            var predictor = new TurningAnglePredictor(_currentImagePath, pathToMLModel);
+            return predictor.Predict();
         }
     }
 }
