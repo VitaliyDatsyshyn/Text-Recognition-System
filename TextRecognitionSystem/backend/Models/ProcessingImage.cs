@@ -1,11 +1,14 @@
-﻿using backend.Helpers;
+﻿using backend.Enums;
+using backend.Helpers;
 using backend.ImagePreprocessing;
+using backend.TextPostprocessing;
 
 namespace backend.Models
 {
     public class ProcessingImage
     {
         private string _currentImagePath;
+        public string OCRedText { get; private set; }
 
         public ProcessingImage(string imagePath)
         {
@@ -55,6 +58,19 @@ namespace backend.Models
 
             var predictor = new TurningAnglePredictor(_currentImagePath, pathToMLModel);
             return predictor.Predict();
+        }
+
+        public void CorrectOCRedText(string pathToDictionary)
+        {
+            FileHelper.CheckFilePathExisting(pathToDictionary);
+            var dictionary = JsonHelper.LoadListOfString(pathToDictionary);
+            var wordsCorrector = new WordsCorrector(dictionary, OCRedText);
+            OCRedText = wordsCorrector.CorrectText();
+        }
+
+        public bool IsOCRedTextValid(Languages language)
+        {
+            return TextChecker.IsTextValid(language, OCRedText);
         }
     }
 }
