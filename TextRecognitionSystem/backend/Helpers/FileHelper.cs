@@ -9,7 +9,7 @@ namespace backend.Helpers
         {
             if (String.IsNullOrEmpty(filePath))
                 throw new NullReferenceException("File path is empty");
-            else if (File.Exists(filePath))
+            else if (!File.Exists(filePath))
                 throw new InvalidDataException("Invalid file path! File doesn`t exist!");
         }
 

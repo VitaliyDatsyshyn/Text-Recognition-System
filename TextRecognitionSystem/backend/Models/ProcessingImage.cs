@@ -27,7 +27,7 @@ namespace backend.Models
                 _currentImagePath = binarizedImagePath;
         }
 
-        public void RomoveNoise()
+        public void RemoveNoise()
         {
             FileHelper.CheckFilePathExisting(_currentImagePath);
             var unnoisedImagePath = FileHelper.InsertMarkIntoFileName(_currentImagePath, "unnoised");
@@ -54,7 +54,7 @@ namespace backend.Models
                 _currentImagePath = rotatedImagePath;
         }
 
-        public int PredictTurningAngle(string pathToMLModel)
+        public int PredictTurningAngle(string pathToMLModel = "")
         {
             if (string.IsNullOrEmpty(pathToMLModel))
                 pathToMLModel = @"Resources\TurningAngleModel.zip";
