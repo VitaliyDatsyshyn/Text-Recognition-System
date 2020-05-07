@@ -1,6 +1,7 @@
 ﻿using backend.Enums;
 using backend.Helpers;
 using backend.ImagePreprocessing;
+using backend.OCR;
 using backend.TextPostprocessing;
 
 namespace backend.Models
@@ -8,11 +9,13 @@ namespace backend.Models
     public class ProcessingImage
     {
         private string _currentImagePath;
+        private Languages _language;
         public string OCRedText { get; private set; }
 
-        public ProcessingImage(string imagePath)
+        public ProcessingImage(string imagePath, Languages language)
         {
             _currentImagePath = imagePath;
+            _language = language;
         }
 
         public void Binarize()
@@ -60,6 +63,11 @@ namespace backend.Models
             return predictor.Predict();
         }
 
+        public void OcrImage(OcrEngines ocrEngine)
+        {
+            OCRedText = new OcrEnginesFactory(_language).CreateInstance(ocrEngine).GetText(_currentImagePath);
+        }
+
         public void CorrectOCRedText(string pathToDictionary)
         {
             FileHelper.CheckFilePathExisting(pathToDictionary);
@@ -68,9 +76,9 @@ namespace backend.Models
             OCRedText = wordsCorrector.CorrectText();
         }
 
-        public bool IsOCRedTextValid(Languages language)
+        public bool IsOCRedTextValid()
         {
-            return TextChecker.IsTextValid(language, OCRedText);
+            return TextChecker.IsTextValid(_language, OCRedText);
         }
     }
 }
