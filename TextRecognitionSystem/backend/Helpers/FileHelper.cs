@@ -16,7 +16,16 @@ namespace backend.Helpers
         public static string InsertMarkIntoFileName(string filePath, string mark)
         {
             var file = new FileInfo(filePath);
-            return Path.Combine(file.DirectoryName, file.Name.Replace(file.Extension, string.Empty) + " " + mark + file.Extension);
+            return Path.Combine(file.DirectoryName, Path.GetFileNameWithoutExtension(file.FullName) + " " + mark + file.Extension);
+        }
+
+        public static void CleanUpByFileName(string filePath)
+        {
+            string[] files = Directory.GetFiles(Directory.GetCurrentDirectory(), Path.GetFileNameWithoutExtension(filePath) + "*");
+            foreach (string file in files)
+            {
+                File.Delete(file);
+            }
         }
     }
 }
