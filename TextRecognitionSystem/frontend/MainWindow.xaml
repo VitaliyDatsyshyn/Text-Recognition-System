@@ -5,8 +5,218 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:frontend"
         mc:Ignorable="d"
-        Title="MainWindow" Height="450" Width="800">
-    <Grid>
+        Title="MainWindow" Height="450" Width="700"
+        FontFamily="Franklin Gothic"
+        FontSize="16" 
+        ResizeMode="NoResize"
+        WindowStartupLocation="CenterScreen"
+        WindowStyle="SingleBorderWindow">
+    <Grid Background="WhiteSmoke">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="1*"/>
+            <RowDefinition Height="9*"/>
+        </Grid.RowDefinitions>
+        <Grid Grid.Row="0" Background="Black">
+            <TextBlock Text="Text Recognition System Wizard" Foreground="WhiteSmoke" VerticalAlignment="Center" FontSize="32" FontWeight="Bold" FontFamily="Franklin Gothic Demi Cond" HorizontalAlignment="Center"/>
+        </Grid>
+        <Grid Grid.Row="1" Margin="20">
+            <Grid x:Name="LanguagePage" Visibility="Visible">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="9*"/>
+                    <RowDefinition Height="1*"/>
+                </Grid.RowDefinitions>
+                <StackPanel Grid.Row="0" Margin="10">
+                    <TextBlock Text="Document Language" FontSize="35" Margin="0,0,0,20"/>
+                    <TextBlock TextWrapping="Wrap" Text="Choose the document language."/>
+                    <RadioButton GroupName="LanguageRadio" Margin="0,20,0,5" Content="English" Checked="SelectEnglish" IsChecked="True"/>
+                    <RadioButton GroupName="LanguageRadio" Content="Ukrainian" Checked="SelectUkrainian"/>
+                </StackPanel>
+                <StackPanel Grid.Row="1" Orientation="Horizontal" HorizontalAlignment="Right">
+                    <Button HorizontalAlignment="Right" Content="Next" Width="70" Background="Black" Foreground="WhiteSmoke" Click="LanguageNext"/>
+                    <Button Margin="10,0,0,0" HorizontalAlignment="Right" Content="Cancel" Width="70" Background="Black" Foreground="WhiteSmoke" Click="CloseWindow"/>
+                </StackPanel>
+            </Grid>
+            <Grid x:Name="SetupPage" Visibility="Hidden">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="9*"/>
+                    <RowDefinition Height="1*"/>
+                </Grid.RowDefinitions>
+                <StackPanel Grid.Row="0" Margin="10">
+                    <TextBlock Text="Setup Mode" FontSize="35" Margin="0,0,0,20"/>
+                    <TextBlock TextWrapping="Wrap" Text="Choose setup mode. Full mode turns on all features for image pre-processing and text post-processing. Custom mode allows you to choose these features."/>
+                    <RadioButton GroupName="SetupRadio" Margin="0,20,0,5" Content="Full mode" Checked="SelectFullMode" IsChecked="True"/>
+                    <RadioButton GroupName="SetupRadio" Content="Custom mode" Checked="SelectCustomMode"/>
+                </StackPanel>
+                <StackPanel Grid.Row="1" Orientation="Horizontal" HorizontalAlignment="Right">
+                    <Button HorizontalAlignment="Right" Content="Back" Width="70" Background="Black" Foreground="WhiteSmoke" Click="SetupBack"/>
+                    <Button Margin="10,0,0,0" HorizontalAlignment="Right" Content="Next" Width="70" Background="Black" Foreground="WhiteSmoke" Click="SetupNext"/>
+                    <Button Margin="10,0,0,0" HorizontalAlignment="Right" Content="Cancel" Width="70" Background="Black" Foreground="WhiteSmoke" Click="CloseWindow"/>
+                </StackPanel>
+            </Grid>
+            <Grid x:Name="BinarizationPage" Visibility="Hidden">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="9*"/>
+                    <RowDefinition Height="1*"/>
+                </Grid.RowDefinitions>
+                <StackPanel Grid.Row="0" Margin="10">
+                    <TextBlock Text="Document Binarization" FontSize="35" Margin="0,0,0,20"/>
+                    <TextBlock Margin="0,0,0,20" TextWrapping="Wrap" Text="Description: Converts color of pixels of 'light grey' to white and 'dark grey' to black."/>
+                    <RadioButton GroupName="BinarizationRadio" Margin="0,0,0,5" Content="Turn on" Checked="TurnOnBinarization" IsChecked="True"/>
+                    <RadioButton GroupName="BinarizationRadio" Content="Turn off" Checked="TurnOffBinarization"/>
+                </StackPanel>
+                <StackPanel Grid.Row="1" Orientation="Horizontal" HorizontalAlignment="Right">
+                    <Button HorizontalAlignment="Right" Content="Back" Width="70" Background="Black" Foreground="WhiteSmoke" Click="BinarizationBack"/>
+                    <Button Margin="10,0,0,0" HorizontalAlignment="Right" Content="Next" Width="70" Background="Black" Foreground="WhiteSmoke" Click="BinarizationNext"/>
+                    <Button Margin="10,0,0,0" HorizontalAlignment="Right" Content="Cancel" Width="70" Background="Black" Foreground="WhiteSmoke" Click="CloseWindow"/>
+                </StackPanel>
+            </Grid>
+            <Grid x:Name="NoiseRemovalPage" Visibility="Hidden">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="9*"/>
+                    <RowDefinition Height="1*"/>
+                </Grid.RowDefinitions>
+                <StackPanel Grid.Row="0" Margin="10">
+                    <TextBlock Text="Noise Removal" FontSize="35" Margin="0,0,0,20"/>
+                    <TextBlock Margin="0,0,0,20" TextWrapping="Wrap" Text="Description: Analyzes pixels around each other and makes assumption whether it is part of noise."/>
+                    <RadioButton GroupName="NoiseRemovalRadio" Margin="0,0,0,5" Content="Turn on" Checked="TurnOnNoiseRemoval" IsChecked="True"/>
+                    <RadioButton GroupName="NoiseRemovalRadio" Content="Turn off" Checked="TurnOffNoiseRemoval"/>
+                </StackPanel>
+                <StackPanel Grid.Row="1" Orientation="Horizontal" HorizontalAlignment="Right">
+                    <Button HorizontalAlignment="Right" Content="Back" Width="70" Background="Black" Foreground="WhiteSmoke" Click="NoiseRemovalBack"/>
+                    <Button Margin="10,0,0,0" HorizontalAlignment="Right" Content="Next" Width="70" Background="Black" Foreground="WhiteSmoke" Click="NoiseRemovalNext"/>
+                    <Button Margin="10,0,0,0" HorizontalAlignment="Right" Content="Cancel" Width="70" Background="Black" Foreground="WhiteSmoke" Click="CloseWindow"/>
+                </StackPanel>
+            </Grid>
+            <Grid x:Name="ContrastAdjustmentPage" Visibility="Hidden">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="9*"/>
+                    <RowDefinition Height="1*"/>
+                </Grid.RowDefinitions>
+                <StackPanel Grid.Row="0" Margin="10">
+                    <TextBlock Text="Contrast Adjustment" FontSize="35" Margin="0,0,0,20"/>
+                    <TextBlock TextWrapping="Wrap" Text="Description: Adjust document contrast by setting proper contrast limit."/>
+                    <RadioButton GroupName="ConrastAdjustmentRadio" Margin="0,20,0,5" Content="Turn on" Checked="TurnOnContrastAdjustment" IsChecked="True"/>
+                    <RadioButton GroupName="ConrastAdjustmentRadio" Content="Turn off" Checked="TurnOffContrastAdjustment"/>
+                </StackPanel>
+                <StackPanel Grid.Row="1" Orientation="Horizontal" HorizontalAlignment="Right">
+                    <Button HorizontalAlignment="Right" Content="Back" Width="70" Background="Black" Foreground="WhiteSmoke" Click="ContrastAdjustmentNext"/>
+                    <Button Margin="10,0,0,0" HorizontalAlignment="Right" Content="Next" Width="70" Background="Black" Foreground="WhiteSmoke" Click="ContrastAdjustmentNext"/>
+                    <Button Margin="10,0,0,0" HorizontalAlignment="Right" Content="Cancel" Width="70" Background="Black" Foreground="WhiteSmoke" Click="CloseWindow"/>
+                </StackPanel>
+            </Grid>
+            <Grid x:Name="RotationPage" Visibility="Hidden">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="9*"/>
+                    <RowDefinition Height="1*"/>
+                </Grid.RowDefinitions>
+                <StackPanel Grid.Row="0" Margin="10">
+                    <TextBlock Text="Document Rotation" FontSize="35" Margin="0,0,0,20"/>
+                    <TextBlock Margin="0,0,0,20" TextWrapping="Wrap" Text="Description: Machine Learning model predicts turning angle and rotates document."/>
+                    <RadioButton GroupName="RotationRadio" Margin="0,0,0,5" Content="Turn on" Checked="TurnOnRotation" IsChecked="True"/>
+                    <RadioButton GroupName="RotationRadio" Content="Turn off" Checked="TurnOffRotation"/>
+                </StackPanel>
+                <StackPanel Grid.Row="1" Orientation="Horizontal" HorizontalAlignment="Right">
+                    <Button HorizontalAlignment="Right" Content="Back" Width="70" Background="Black" Foreground="WhiteSmoke" Click="RotationBack"/>
+                    <Button Margin="10,0,0,0" HorizontalAlignment="Right" Content="Next" Width="70" Background="Black" Foreground="WhiteSmoke" Click="RotationNext"/>
+                    <Button Margin="10,0,0,0" HorizontalAlignment="Right" Content="Cancel" Width="70" Background="Black" Foreground="WhiteSmoke" Click="CloseWindow"/>
+                </StackPanel>
+            </Grid>
+            <Grid x:Name="TypeRecognitionPage" Visibility="Hidden">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="9*"/>
+                    <RowDefinition Height="1*"/>
+                </Grid.RowDefinitions>
+                <StackPanel Grid.Row="0" Margin="10">
+                    <TextBlock Text="Document Type Recognition" FontSize="35" Margin="0,0,0,20"/>
+                    <TextBlock Margin="0,0,0,20" TextWrapping="Wrap" Text="Description: Machine Learning model predicts type of document and processes this document according to that type."/>
+                    <RadioButton GroupName="TypeRecognitionRadio" Margin="0,0,0,5" Content="Turn on" Checked="TurnOnTypeRecognition" IsChecked="True"/>
+                    <RadioButton GroupName="TypeRecognitionRadio" Content="Turn off" Checked="TurnOffTypeRecognition"/>
+                </StackPanel>
+                <StackPanel Grid.Row="1" Orientation="Horizontal" HorizontalAlignment="Right">
+                    <Button HorizontalAlignment="Right" Content="Back" Width="70" Background="Black" Foreground="WhiteSmoke" Click="TypeRecognitionBack"/>
+                    <Button Margin="10,0,0,0" HorizontalAlignment="Right" Content="Next" Width="70" Background="Black" Foreground="WhiteSmoke" Click="TypeRecognitionNext"/>
+                    <Button Margin="10,0,0,0" HorizontalAlignment="Right" Content="Cancel" Width="70" Background="Black" Foreground="WhiteSmoke" Click="CloseWindow"/>
+                </StackPanel>
+            </Grid>
+            <Grid x:Name="WordsCorrectionPage" Visibility="Hidden">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="9*"/>
+                    <RowDefinition Height="1*"/>
+                </Grid.RowDefinitions>
+                <StackPanel Grid.Row="0" Margin="10">
+                    <TextBlock Text="Words Correction" FontSize="35" Margin="0,0,0,20"/>
+                    <TextBlock Margin="0,0,0,20" TextWrapping="Wrap" Text="Description: using Levenshtein distance for fixing OCR errors."/>
+                    <RadioButton GroupName="WordsCorrectionRadio" Margin="0,0,0,5" Content="Turn on" Checked="TurnOnWordsCorrection" IsChecked="True"/>
+                    <RadioButton GroupName="WordsCorrectionRadio" Content="Turn off" Checked="TurnOffWordsCorrection"/>
+                </StackPanel>
+                <StackPanel Grid.Row="1" Orientation="Horizontal" HorizontalAlignment="Right">
+                    <Button HorizontalAlignment="Right" Content="Back" Width="70" Background="Black" Foreground="WhiteSmoke" Click="WordsCorrectionBack"/>
+                    <Button Margin="10,0,0,0" HorizontalAlignment="Right" Content="Next" Width="70" Background="Black" Foreground="WhiteSmoke" Click="WordsCorrectionNext"/>
+                    <Button Margin="10,0,0,0" HorizontalAlignment="Right" Content="Cancel" Width="70" Background="Black" Foreground="WhiteSmoke" Click="CloseWindow"/>
+                </StackPanel>
+            </Grid>
+            <Grid x:Name="DocumentsSelectionPage" Visibility="Hidden">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="9*"/>
+                    <RowDefinition Height="1*"/>
+                </Grid.RowDefinitions>
+                <StackPanel Grid.Row="0" Margin="10">
+                    <TextBlock Text="Documents Selection" FontSize="35" Margin="0,0,0,20"/>
+                    <TextBlock Margin="0,0,0,20" TextWrapping="Wrap" Text="Upload documents to processing."/>
+                    <StackPanel Grid.Row="3" Margin="15" Orientation="Horizontal">
+                        <TextBox x:Name="PathToDocuments" Height="28" Width="520"  />
+                        <Button Height="28" Margin="10,0,0,0" Width="60" Content="Browse" Background="Black" Foreground="WhiteSmoke" Click="BrowseToDocuments"/>
+                    </StackPanel>
+                </StackPanel>
+                <StackPanel Grid.Row="1" Orientation="Horizontal" HorizontalAlignment="Right">
+                    <Button HorizontalAlignment="Right" Content="Back" Width="70" Background="Black" Foreground="WhiteSmoke" Click="DocumentsSelectionBack"/>
+                    <Button Margin="10,0,0,0" HorizontalAlignment="Right" Content="Next" Width="70" Background="Black" Foreground="WhiteSmoke" Click="DocumentsSelectionNext"/>
+                    <Button Margin="10,0,0,0" HorizontalAlignment="Right" Content="Cancel" Width="70" Background="Black" Foreground="WhiteSmoke" Click="CloseWindow"/>
+                </StackPanel>
+            </Grid>
+            <Grid x:Name="KeyWordsPage" Visibility="Hidden">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="2*"/>
+                    <RowDefinition Height="7*"/>
+                    <RowDefinition Height="1*"/>
+                </Grid.RowDefinitions>
+                <StackPanel Grid.Row="0" Margin="10">
+                    <TextBlock Text="Key Words" FontSize="35" Margin="0,0,0,20"/>
+                </StackPanel>
+                <Grid Grid.Row="1" Margin="20">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="5*"/>
+                        <ColumnDefinition Width="5*"/>
+                    </Grid.ColumnDefinitions>
+                    <Grid Grid.Column="0">
+                        <ListBox x:Name="KeyWords" Width="300" HorizontalAlignment="Left"/>
+                    </Grid>
+                    <Grid Margin="15,0,0,0" Grid.Column="1">
+                        <Grid>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="10*"/>
+                                <RowDefinition Height="5*"/>
+                                <RowDefinition Height="10*"/>
+                                <RowDefinition Height="5*"/>
+                                <RowDefinition Height="10*"/>
+                                <RowDefinition Height="50*"/>
+                            </Grid.RowDefinitions>
+                            <Grid Grid.Row="0">
+                                <TextBox x:Name="NewKeyWord" Width="220" HorizontalAlignment="Left"/>
+                                <Button HorizontalAlignment="Right" Width="60" Content="Add" Background="Black" Foreground="WhiteSmoke" Click="AddKeyWord" />
+                            </Grid>
+                            <Button Grid.Row="2" Width="60" HorizontalAlignment="Right" Content="Load" Background="Black" Foreground="WhiteSmoke" Click="LoadKeyWords"/>
+                            <Button Grid.Row="4" Width="60" HorizontalAlignment="Right" Content="Save" Background="Black" Foreground="WhiteSmoke" Click="SaveKeyWords"/>
+                        </Grid>
+                    </Grid>
+                </Grid>
+                <StackPanel Grid.Row="2" Orientation="Horizontal" HorizontalAlignment="Right">
+                    <Button HorizontalAlignment="Right" Content="Back" Width="70" Background="Black" Foreground="WhiteSmoke" Click="KeyWordsBack"/>
+                    <Button Margin="10,0,0,0" HorizontalAlignment="Right" Content="Next" Width="70" Background="Black" Foreground="WhiteSmoke" Click="KeyWordsNext"/>
+                    <Button Margin="10,0,0,0" HorizontalAlignment="Right" Content="Cancel" Width="70" Background="Black" Foreground="WhiteSmoke" Click="CloseWindow"/>
+                </StackPanel>
+            </Grid>
+        </Grid>
 
     </Grid>
 </Window>
