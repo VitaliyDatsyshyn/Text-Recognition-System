@@ -14,11 +14,13 @@ namespace frontend
         private TextRecognitionSettings _settings;
         private Modes _mode = Modes.Full;
         private List<string> _processingFiles;
+        private List<OcrResults> _ocrResults;
 
         public MainWindow()
         {
             _settings = new TextRecognitionSettings();
             _processingFiles = new List<string>();
+            _ocrResults = new List<OcrResults>();
             InitializeComponent();
         }
 
@@ -236,10 +238,35 @@ namespace frontend
             DocumentsSelectionPage.Visibility = Visibility.Visible;
         }
 
-        private void KeyWordsNext(object sender, RoutedEventArgs e)
+        private void Run(object sender, RoutedEventArgs e)
         {
             KeyWordsPage.Visibility = Visibility.Hidden;
-            DocumentsSelectionPage.Visibility = Visibility.Visible; // CHANGE TO NEXT PAGE
+            ResultsPage.Visibility = Visibility.Visible;
+            OcrResults.ItemsSource = _ocrResults;
+            foreach(var file in _processingFiles)
+            {
+                _ocrResults.Add(new OcrResults() { FileName = new FileInfo(file).Name, OcredText = "", KeyWords = "" }); // TEMP
+                OcrResults.Items.Refresh();
+            }
+        }
+        #endregion
+
+        #region Results page
+        private void SaveAsTxt(object sender, RoutedEventArgs e)
+        {
+            var resultedFile = FileHelper.SaveResultsAsTxt(_ocrResults);
+            MessageBox.Show("Saved to " + resultedFile);
+        }
+        private void SaveAsCsv(object sender, RoutedEventArgs e)
+        {
+            var resultedFile = FileHelper.SaveResultsAsCsv(_ocrResults);
+            MessageBox.Show("Saved to " + resultedFile);
+        }
+
+        private void ResultsBack(object sender, RoutedEventArgs e)
+        {
+            ResultsPage.Visibility = Visibility.Hidden;
+            KeyWordsPage.Visibility = Visibility.Visible;
         }
         #endregion
     }

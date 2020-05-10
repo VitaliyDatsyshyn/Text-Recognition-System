@@ -5,12 +5,13 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:frontend"
         mc:Ignorable="d"
-        Title="MainWindow" Height="450" Width="700"
+        Title="TRS Wizard" Height="450" Width="700"
         FontFamily="Franklin Gothic"
         FontSize="16" 
         ResizeMode="NoResize"
         WindowStartupLocation="CenterScreen"
-        WindowStyle="SingleBorderWindow">
+        WindowStyle="SingleBorderWindow"
+        Icon="icon1.ico">
     <Grid Background="WhiteSmoke">
         <Grid.RowDefinitions>
             <RowDefinition Height="1*"/>
@@ -212,8 +213,35 @@
                 </Grid>
                 <StackPanel Grid.Row="2" Orientation="Horizontal" HorizontalAlignment="Right">
                     <Button HorizontalAlignment="Right" Content="Back" Width="70" Background="Black" Foreground="WhiteSmoke" Click="KeyWordsBack"/>
-                    <Button Margin="10,0,0,0" HorizontalAlignment="Right" Content="Next" Width="70" Background="Black" Foreground="WhiteSmoke" Click="KeyWordsNext"/>
+                    <Button Margin="10,0,0,0" HorizontalAlignment="Right" Content="Run" Width="70" Background="Black" Foreground="WhiteSmoke" Click="Run"/>
                     <Button Margin="10,0,0,0" HorizontalAlignment="Right" Content="Cancel" Width="70" Background="Black" Foreground="WhiteSmoke" Click="CloseWindow"/>
+                </StackPanel>
+            </Grid>
+            <Grid x:Name="ResultsPage" Visibility="Hidden">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="15*"/>
+                    <RowDefinition Height="75*"/>
+                    <RowDefinition Height="10*"/>
+                </Grid.RowDefinitions>
+                <StackPanel Grid.Row="0" Margin="10,0,10,0">
+                    <TextBlock Text="Results" FontSize="35" />
+                </StackPanel>
+                <Grid Grid.Row="1" Margin="10,0,10,10">
+                    <ListView Name="OcrResults" >
+                        <ListView.View>
+                            <GridView>
+                                <GridViewColumn DisplayMemberBinding="{Binding Path=FileName}" Width="auto">File Name</GridViewColumn>
+                                <GridViewColumn DisplayMemberBinding="{Binding Path=OcredText}" Width="auto">Recognized Text</GridViewColumn>
+                                <GridViewColumn DisplayMemberBinding="{Binding Path=KeyWords}" Width="auto">Key Words</GridViewColumn>
+                            </GridView>
+                        </ListView.View>
+                    </ListView>
+                </Grid>
+                <StackPanel Grid.Row="2" Orientation="Horizontal" HorizontalAlignment="Right">
+                    <Button HorizontalAlignment="Right" Content="Save As TXT" Width="100" Background="Black" Foreground="WhiteSmoke" Click="SaveAsTxt"/>
+                    <Button Margin="10,0,0,0" HorizontalAlignment="Right" Content="Save As CSV" Width="100" Background="Black" Foreground="WhiteSmoke" Click="SaveAsCsv"/>
+                    <Button Margin="10,0,0,0" HorizontalAlignment="Right" Content="Back" Width="100" Background="Black" Foreground="WhiteSmoke" Click="ResultsBack"/>
+                    <Button Margin="10,0,0,0" HorizontalAlignment="Right" Content="Close" Width="100" Background="Black" Foreground="WhiteSmoke" Click="CloseWindow"/>
                 </StackPanel>
             </Grid>
         </Grid>
