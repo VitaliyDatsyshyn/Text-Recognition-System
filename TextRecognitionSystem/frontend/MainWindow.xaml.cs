@@ -4,6 +4,9 @@ using frontend.Models;
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Net;
+using System.Net.Http;
+using System.Net.Http.Headers;
 using System.Windows;
 using System.Windows.Controls;
 
@@ -44,7 +47,7 @@ namespace frontend
         private void SelectCustomMode(object sender, RoutedEventArgs e) => _mode = Modes.Custom;
 
         private void SetupBack(object sender, RoutedEventArgs e)
-        {            
+        {
             SetupPage.Visibility = Visibility.Hidden;
             LanguagePage.Visibility = Visibility.Visible;
         }
@@ -243,8 +246,10 @@ namespace frontend
             KeyWordsPage.Visibility = Visibility.Hidden;
             ResultsPage.Visibility = Visibility.Visible;
             OcrResults.ItemsSource = _ocrResults;
-            foreach(var file in _processingFiles)
+            foreach (var file in _processingFiles)
             {
+                FileHelper.SendFileToServer(file);
+
                 _ocrResults.Add(new OcrResults() { FileName = new FileInfo(file).Name, OcredText = "", KeyWords = "" }); // TEMP
                 OcrResults.Items.Refresh();
             }

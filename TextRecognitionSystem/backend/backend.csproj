@@ -24,5 +24,9 @@
     </None>
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="ProcessingDocuments\" />
+  </ItemGroup>
+
 
 </Project>
