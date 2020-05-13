@@ -248,8 +248,9 @@ namespace frontend
             OcrResults.ItemsSource = _ocrResults;
             foreach (var file in _processingFiles)
             {
-                FileHelper.SendFileToServer(file);
-
+                ServerHelper.UploadFileToServer(file);
+                _settings.FileName = file;
+                ServerHelper.GetOcrResults(_settings);
                 _ocrResults.Add(new OcrResults() { FileName = new FileInfo(file).Name, OcredText = "", KeyWords = "" }); // TEMP
                 OcrResults.Items.Refresh();
             }

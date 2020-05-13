@@ -5,6 +5,7 @@ namespace frontend.Models
 {
     public class TextRecognitionSettings
     {
+        public string FileName { get; set; }
         public string Language { get; private set; }
         public bool IsBinarizationEnable { get; set; }
         public bool IsNoiseRemovalEnable { get; set; }
@@ -16,6 +17,7 @@ namespace frontend.Models
 
         public TextRecognitionSettings()
         {
+            FileName = string.Empty;
             Language = "eng";
             IsBinarizationEnable = true;
             IsNoiseRemovalEnable = true;

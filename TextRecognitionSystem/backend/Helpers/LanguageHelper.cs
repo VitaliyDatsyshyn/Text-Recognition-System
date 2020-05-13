@@ -14,5 +14,14 @@ namespace backend.Helpers
             else
                 throw new NotImplementedException("Not supported language");
         }
+        public static Languages GetLanguageByString(string language)
+        {
+            if (language.ToLower() == "eng")
+                return Languages.English;
+            else if (language.ToLower() == "ukr")
+                return Languages.Ukrainian;
+            else
+                throw new NotImplementedException("Not supported language");
+        }
     }
 }
