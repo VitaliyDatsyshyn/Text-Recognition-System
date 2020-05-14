@@ -4,9 +4,7 @@ using frontend.Models;
 using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Net;
-using System.Net.Http;
-using System.Net.Http.Headers;
+using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 
@@ -246,14 +244,20 @@ namespace frontend
             KeyWordsPage.Visibility = Visibility.Hidden;
             ResultsPage.Visibility = Visibility.Visible;
             OcrResults.ItemsSource = _ocrResults;
-            foreach (var file in _processingFiles)
+            Task.Run(() =>
             {
-                ServerHelper.UploadFileToServer(file);
-                _settings.FileName = file;
-                ServerHelper.GetOcrResults(_settings);
-                _ocrResults.Add(new OcrResults() { FileName = new FileInfo(file).Name, OcredText = "", KeyWords = "" }); // TEMP
-                OcrResults.Items.Refresh();
-            }
+                foreach (var file in _processingFiles)
+                {
+                    _settings.FileName = file;
+                    ServerHelper.UploadFileToServer(file);
+                    var results = ServerHelper.GetOcrResults(_settings);
+                    this.Dispatcher.Invoke(() =>
+                    {
+                        _ocrResults.Add(results);
+                        OcrResults.Items.Refresh();
+                    });
+                }
+            });
         }
         #endregion
 

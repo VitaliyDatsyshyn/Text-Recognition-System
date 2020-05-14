@@ -44,8 +44,8 @@ namespace frontend.Helpers
             {
                 var jsonSettings = JsonConvert.SerializeObject(settings);
                 var stringContent = new StringContent(jsonSettings, Encoding.UTF8, "application/json");
-                var result = client.PostAsync("https://localhost:44345/api/textrecognition", stringContent).Result.Content.ReadAsStringAsync().Result;
-                return new OcrResults(); // TEMP
+                var response = client.PostAsync("https://localhost:44345/api/textrecognition", stringContent).Result.Content.ReadAsStringAsync().Result;
+                return JsonConvert.DeserializeObject<OcrResults>(response);
             }
         }
     }

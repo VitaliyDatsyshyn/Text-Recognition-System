@@ -2,6 +2,7 @@
 using backend.Models.ML;
 using Microsoft.ML;
 using System;
+using System.Linq;
 
 namespace backend.TextPostprocessing
 {
@@ -25,7 +26,7 @@ namespace backend.TextPostprocessing
                 ITransformer loadedModel = mlContext.Model.Load(_pathToModel, out var columns);
                 var predictor = mlContext.Model.CreatePredictionEngine<DocTypeInput, DocsTypePrediction>(loadedModel);
                 var predictionResult = predictor.Predict(new DocTypeInput() { DocText = _docText });
-                return predictionResult.DocType;
+                return predictionResult.Score.Max() > 0.93 ? predictionResult.DocType : string.Empty;
             }
             catch (Exception ex)
             {

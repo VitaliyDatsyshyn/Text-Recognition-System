@@ -21,7 +21,7 @@ namespace backend.Helpers
 
         public static void CleanUpProcessingFiles()
         {
-            string[] files = Directory.GetFiles("ProcessingFiles");
+            string[] files = Directory.GetFiles(Path.Combine(Environment.CurrentDirectory + "ProcessingFiles")); // TEMP
             foreach (string file in files)
             {
                 File.Delete(file);
@@ -33,6 +33,11 @@ namespace backend.Helpers
             var processingDocumentPath = Path.Combine("ProcessingDocuments",  new FileInfo(file).Name);
             CheckFilePathExisting(processingDocumentPath);
             return processingDocumentPath;
+        }
+
+        public static bool IsPdf(string file)
+        {
+            return new FileInfo(file).Extension.ToLower().Contains("pdf");
         }
     }
 }
