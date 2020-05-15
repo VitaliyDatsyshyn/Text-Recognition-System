@@ -244,20 +244,27 @@ namespace frontend
             KeyWordsPage.Visibility = Visibility.Hidden;
             ResultsPage.Visibility = Visibility.Visible;
             OcrResults.ItemsSource = _ocrResults;
-            Task.Run(() =>
+            try
             {
-                foreach (var file in _processingFiles)
+                Task.Run(() =>
                 {
-                    _settings.FileName = file;
-                    ServerHelper.UploadFileToServer(file);
-                    var results = ServerHelper.GetOcrResults(_settings);
-                    this.Dispatcher.Invoke(() =>
+                    foreach (var file in _processingFiles)
                     {
-                        _ocrResults.Add(results);
-                        OcrResults.Items.Refresh();
-                    });
-                }
-            });
+                        _settings.FileName = file;
+                        ServerHelper.UploadFileToServer(file);
+                        var results = ServerHelper.GetOcrResults(_settings);
+                        this.Dispatcher.Invoke(() =>
+                        {
+                            _ocrResults.AddRange(results);
+                            OcrResults.Items.Refresh();
+                        });
+                    }
+                });
+            }
+            catch(Exception ex)
+            {
+                MessageBox.Show("ERROR\n" + ex.Message);
+            }
         }
         #endregion
 

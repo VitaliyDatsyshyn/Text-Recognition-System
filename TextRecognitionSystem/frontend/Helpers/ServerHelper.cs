@@ -2,6 +2,8 @@
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Http.Internal;
 using Newtonsoft.Json;
+using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Net.Http;
 using System.Net.Http.Headers;
@@ -38,15 +40,18 @@ namespace frontend.Helpers
             }
         }
 
-        public static OcrResults GetOcrResults(TextRecognitionSettings settings)
+        public static IEnumerable<OcrResults> GetOcrResults(TextRecognitionSettings settings)
         {
-            using(var client = new HttpClient())
+            var jsonSettings = JsonConvert.SerializeObject(settings);
+            var stringContent = new StringContent(jsonSettings, Encoding.UTF8, "application/json");
+            string response = string.Empty;
+            using (var client = new HttpClient())
             {
-                var jsonSettings = JsonConvert.SerializeObject(settings);
-                var stringContent = new StringContent(jsonSettings, Encoding.UTF8, "application/json");
-                var response = client.PostAsync("https://localhost:44345/api/textrecognition", stringContent).Result.Content.ReadAsStringAsync().Result;
-                return JsonConvert.DeserializeObject<OcrResults>(response);
+                client.Timeout = TimeSpan.FromMinutes(20);
+                response = client.PostAsync("https://localhost:44345/api/textrecognition", stringContent).Result.Content.ReadAsStringAsync().Result;
             }
+
+            return JsonConvert.DeserializeObject<IEnumerable<OcrResults>>(response);
         }
     }
 }

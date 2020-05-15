@@ -19,9 +19,9 @@ namespace backend.Helpers
             return Path.Combine(file.DirectoryName, Path.GetFileNameWithoutExtension(file.FullName) + " " + mark + file.Extension);
         }
 
-        public static void CleanUpProcessingFiles()
+        public static void CleanUpFilesByName(string filePath)
         {
-            string[] files = Directory.GetFiles(Path.Combine(Environment.CurrentDirectory + "ProcessingFiles")); // TEMP
+            string[] files = Directory.GetFiles(new FileInfo(filePath).DirectoryName, Path.GetFileNameWithoutExtension(filePath) + "*"); 
             foreach (string file in files)
             {
                 File.Delete(file);

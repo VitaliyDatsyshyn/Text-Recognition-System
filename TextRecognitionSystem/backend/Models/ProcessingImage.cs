@@ -3,6 +3,7 @@ using backend.Helpers;
 using backend.ImagePreprocessing;
 using backend.OCR;
 using backend.TextPostprocessing;
+using System.Collections.Generic;
 using System.IO;
 
 namespace backend.Models
@@ -12,16 +13,18 @@ namespace backend.Models
         private string _currentImagePath;
         private Languages _language;
         private string _ocredText;
+        private string _inputFileName;
 
         public ProcessingImage(string imagePath, Languages language)
         {
             _currentImagePath = imagePath;
             _language = language;
+            _inputFileName = new FileInfo(_currentImagePath).Name;
         }
 
-        public OcrResults Process(TextRecognitionSettings settings)
+        public List<OcrResults> Process(TextRecognitionSettings settings)
         {
-            var results = new OcrResults() { FileName = new FileInfo(_currentImagePath).Name };
+            var results = new List<OcrResults>();
             if (settings.IsBinarizationEnable)
                 Binarize();
 
@@ -34,7 +37,8 @@ namespace backend.Models
             if (settings.IsRotationEnable)
             {
                 var angle = PredictTurningAngle();
-                Rotate(angle);
+                if (angle != 0)
+                    Rotate(angle);
             }
 
             OcrImage(OcrEngines.Tesseract);
@@ -45,32 +49,38 @@ namespace backend.Models
                 OcrImage(OcrEngines.Tesseract);
             }
 
-            if (settings.IsWordsCorrectionEnable)
-                CorrectOCRedText(@"Resources\EnglishDictionary.json");
-
-            string[] typeKeyWords = new string[0];
-            if (settings.IsTypeRecognitionEnable)
+            var paragraphs = TextHelper.SplitTextIntoParagraphs(_ocredText);
+            for(var i = 0; i < paragraphs.Length; i++)
             {
-                var type = PredictType();
-                typeKeyWords = GetSpecialTypeKeyWords(type);
-            }
+                if (settings.IsWordsCorrectionEnable)
+                    paragraphs[i] = CorrectOCRedText(@"Resources\EnglishDictionary.json", paragraphs[i]);
 
-            if (settings.KeyWords.Length > 0)
-                results.KeyWords = WordsFinder.GetCountedKeyWordsFromText(_ocredText, settings.KeyWords);
+                string[] typeKeyWords = new string[0];
+                if (settings.IsTypeRecognitionEnable)
+                {
+                    var type = PredictType();
+                    typeKeyWords = GetSpecialTypeKeyWords(type);
+                }
+                var ocrResult = new OcrResults { FileName = _inputFileName };
+                if (settings.KeyWords.Length > 0)
+                    ocrResult.KeyWords = WordsFinder.GetCountedKeyWordsFromText(paragraphs[i], settings.KeyWords);
 
-            if (typeKeyWords.Length > 0)
-            {
-                var foundTypeKeyWords = WordsFinder.GetCountedKeyWordsFromText(_ocredText, typeKeyWords);
-                if (string.IsNullOrEmpty(results.KeyWords))
-                    results.KeyWords = foundTypeKeyWords;
+                if (typeKeyWords.Length > 0)
+                {
+                    var foundTypeKeyWords = WordsFinder.GetCountedKeyWordsFromText(paragraphs[i], typeKeyWords);
+                    if (string.IsNullOrEmpty(ocrResult.KeyWords))
+                        ocrResult.KeyWords = foundTypeKeyWords;
+                    else
+                        ocrResult.KeyWords += foundTypeKeyWords;
+                }
+
+                if (settings.KeyWords.Length > 0 && string.IsNullOrEmpty(ocrResult.KeyWords))
+                    continue;
                 else
-                    results.KeyWords += foundTypeKeyWords;
-            }
+                    ocrResult.OcredText = paragraphs[i];
 
-            if (settings.KeyWords.Length > 0 && string.IsNullOrEmpty(results.KeyWords))
-                results.OcredText = string.Empty;
-            else
-                results.OcredText = _ocredText;
+                results.Add(ocrResult);
+            }
 
             return results;
         }
@@ -125,12 +135,12 @@ namespace backend.Models
             _ocredText = new OcrEnginesFactory(_language).CreateInstance(ocrEngine).GetText(_currentImagePath);
         }
 
-        private void CorrectOCRedText(string pathToDictionary)
+        private string CorrectOCRedText(string pathToDictionary, string text)
         {
             FileHelper.CheckFilePathExisting(pathToDictionary);
             var dictionary = JsonHelper.LoadListOfString(pathToDictionary);
-            var wordsCorrector = new WordsCorrector(dictionary, _ocredText);
-            _ocredText = wordsCorrector.CorrectText();
+            var wordsCorrector = new WordsCorrector(dictionary, text);
+            return wordsCorrector.CorrectText();
         }
 
         private bool IsOCRedTextValid()
