@@ -29,14 +29,25 @@ namespace backend.Models
             }
         }
 
+        public List<OcrResults> Process(TextRecognitionSettings settings)
+        {
+            var results = new List<OcrResults>();
+            foreach(var page in _pdfPages)
+            {
+                results.AddRange(page.Process(settings));
+            }
+
+            return results;
+        }
+
         private IEnumerable<string> ParsePdfDocumentToImages()
         {
             FileHelper.CheckFilePathExisting(_pathToPdf);
             int pdfPageCount = GetPdfPageCount();
             string pdfName = Path.GetFileNameWithoutExtension(_pathToPdf);
-            string imagePathTemplate = Directory.GetCurrentDirectory() + @"\" + pdfName + "_0%d.tiff";
+            string imagePathTemplate = new FileInfo(_pathToPdf).DirectoryName + @"\" + pdfName + "_0%d.tiff";
             GhostscriptWrapper.GeneratePageThumbs(_pathToPdf, imagePathTemplate, 1, pdfPageCount, 200, 200);
-            return Directory.GetFiles(Directory.GetCurrentDirectory(), pdfName + "*");
+            return Directory.GetFiles(new FileInfo(_pathToPdf).DirectoryName, pdfName + "_*");
         }
 
         private int GetPdfPageCount()

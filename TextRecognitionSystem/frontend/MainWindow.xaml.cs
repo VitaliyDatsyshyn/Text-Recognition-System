@@ -250,11 +250,17 @@ namespace frontend
                 {
                     foreach (var file in _processingFiles)
                     {
+                        this.Dispatcher.Invoke(() =>
+                        {
+                            _ocrResults.Add(new OcrResults() { FileName = new FileInfo(file).Name, OcredText = "Processing..."});
+                            OcrResults.Items.Refresh();
+                        });
                         _settings.FileName = file;
                         ServerHelper.UploadFileToServer(file);
                         var results = ServerHelper.GetOcrResults(_settings);
                         this.Dispatcher.Invoke(() =>
                         {
+                            _ocrResults.RemoveAt(_ocrResults.Count - 1);
                             _ocrResults.AddRange(results);
                             OcrResults.Items.Refresh();
                         });

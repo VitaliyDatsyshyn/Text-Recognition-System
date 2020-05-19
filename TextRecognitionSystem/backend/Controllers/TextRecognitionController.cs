@@ -20,6 +20,8 @@ namespace backend.Controllers
             if (FileHelper.IsPdf(documentPath))
             {
                 var pdf = new ProcessingPdf(documentPath, language);
+                pdf.GeneratePagesForPdfDoc();
+                results = pdf.Process(inputSettings);
             }
             else
             {

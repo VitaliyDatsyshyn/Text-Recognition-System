@@ -6,16 +6,16 @@ namespace GhostscriptSharp.API
     internal class GhostScript64
     {
         #region Hooks into Ghostscript DLL
-        [DllImport(@"Ghostscript\dlls\gsdll64.dll", EntryPoint = "gsapi_new_instance")]
+        [DllImport(@"C:\Users\Vitaliy_Datsyshyn\Desktop\My diploma\Text-Recognition-System\TextRecognitionSystem\backend\Ghostscript\dlls\gsdll64.dll", EntryPoint = "gsapi_new_instance")]
         private static extern int CreateAPIInstance(out IntPtr pinstance, IntPtr caller_handle);
 
-        [DllImport(@"Ghostscript\dlls\gsdll64.dll", EntryPoint = "gsapi_init_with_args")]
+        [DllImport(@"C:\Users\Vitaliy_Datsyshyn\Desktop\My diploma\Text-Recognition-System\TextRecognitionSystem\backend\Ghostscript\dlls\gsdll64.dll", EntryPoint = "gsapi_init_with_args")]
         private static extern int InitAPI(IntPtr instance, int argc, string[] argv);
 
-        [DllImport(@"Ghostscript\dlls\gsdll64.dll", EntryPoint = "gsapi_exit")]
+        [DllImport(@"C:\Users\Vitaliy_Datsyshyn\Desktop\My diploma\Text-Recognition-System\TextRecognitionSystem\backend\Ghostscript\dlls\gsdll64.dll", EntryPoint = "gsapi_exit")]
         private static extern int ExitAPI(IntPtr instance);
 
-        [DllImport(@"Ghostscript\dlls\gsdll64.dll", EntryPoint = "gsapi_delete_instance")]
+        [DllImport(@"C:\Users\Vitaliy_Datsyshyn\Desktop\My diploma\Text-Recognition-System\TextRecognitionSystem\backend\Ghostscript\dlls\gsdll64.dll", EntryPoint = "gsapi_delete_instance")]
         private static extern void DeleteAPIInstance(IntPtr instance);
         #endregion
 

@@ -47,7 +47,7 @@ namespace frontend.Helpers
             string response = string.Empty;
             using (var client = new HttpClient())
             {
-                client.Timeout = TimeSpan.FromMinutes(20);
+                client.Timeout = TimeSpan.FromMinutes(60);
                 response = client.PostAsync("https://localhost:44345/api/textrecognition", stringContent).Result.Content.ReadAsStringAsync().Result;
             }
 
